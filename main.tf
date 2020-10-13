@@ -29,41 +29,41 @@ resource "aws_codebuild_project" "deploy_pipeline" {
     type            = "LINUX_CONTAINER"
     privileged_mode = true
     
-    environment_variable {
-      name  = "PGPASSWORD"
-      value = "${var.password_parameter_store_path}"
-      type  = "PARAMETER_STORE"
-    }
-    
-    environment_variable {
-      name  = "TRAVELOKA_ENV"
-      value = "${var.environment}"
-      type  = "PLAINTEXT"
-    }
-    
-    environment_variable {
-      name  = "SQITCH_OPS"
-      value = "deploy"
-      type  = "PLAINTEXT"
-    }
-    
-    environment_variable {
-      name  = "SQITCH_OPS_TARGET"
-      value = "HEAD"
-      type  = "PLAINTEXT"
-    }
+    environment_variable = [
+      {
+        name  = "PGPASSWORD"
+        value = "${var.password_parameter_store_path}"
+        type  = "PARAMETER_STORE"
+      },
+      {
+        name  = "TRAVELOKA_ENV"
+        value = "${var.environment}"
+        type  = "PLAINTEXT"
+      },
+      {
+        name  = "SQITCH_OPS"
+        value = "deploy"
+        type  = "PLAINTEXT"
+      },
+      {
+        name  = "SQITCH_OPS_TARGET"
+        value = "HEAD"
+        type  = "PLAINTEXT"
+      },
 
-    environment_variable {
-      name  = "SQITCH_PROJECT_PATH"
-      value = "${var.sqitch_project_path}"
-      type  = "PLAINTEXT"
-    }
+      {
+        name  = "SQITCH_PROJECT_PATH"
+        value = "${var.sqitch_project_path}"
+        type  = "PLAINTEXT"
+      },
+      "${var.environment_variables}",
+    ]
   }
 
   source {
     type            = "GITHUB"
     location        = "${var.sqitch_project_repository}"
-    buildspec       = "${data.template_file.buildspec.rendered}"
+    buildspec       = "${coalesce(var.buildspec, data.template_file.buildspec.rendered)}"
     git_clone_depth = "1"
   }
 
