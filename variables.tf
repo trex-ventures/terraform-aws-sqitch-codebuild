@@ -65,3 +65,15 @@ variable "log_retention_in_days" {
   description = "the length of the period where each log will be saved"
   default     = "14"
 }
+
+variable "environment_variables" {
+  type        = "list"
+  description = "A list of environment variables to be given to CodeBuild"
+  default     = []
+}
+
+variable "buildspec" {
+  type        = "string"
+  description = "To manually override the default buildspec template"
+  default     = ""
+}
