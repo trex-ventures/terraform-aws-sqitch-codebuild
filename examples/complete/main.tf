@@ -19,7 +19,7 @@ module "codebuild_sqitch" {
     {
       name  = "CI_NAME"
       value = "codebuild"
-      type  = "PARAMETER_STORE"
+      type  = "PLAINTEXT"
     }
   ]
 
