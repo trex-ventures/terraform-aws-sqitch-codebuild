@@ -67,6 +67,8 @@ resource "aws_codebuild_project" "deploy_pipeline" {
     git_clone_depth = "1"
   }
 
+  source_version = "${var.source_version}"
+
   tags = "${merge(var.additional_tags, map(
     "Name", format("%s-%s", var.product_domain, var.pipeline_name),
     "ProductDomain", var.product_domain,

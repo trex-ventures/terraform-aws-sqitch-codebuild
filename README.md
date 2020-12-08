@@ -44,9 +44,9 @@ Go to the `example` directory, there are two example provided there. The `simple
 
 We use [SemVer](https://semver.org/) for our versioning
 
-**Latest stable version** `v0.2.0`, 13th October 2020
+**Latest stable version** `v0.3.0`, 8th December 2020
 
-**Latest version** `v0.2.0`, 13th October 2020
+**Latest version** `v0.3.0`, 8th December 2020
 
 **Latest release** :
 

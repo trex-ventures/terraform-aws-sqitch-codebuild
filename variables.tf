@@ -77,3 +77,9 @@ variable "buildspec" {
   description = "To manually override the default buildspec template"
   default     = ""
 }
+
+variable "source_version" {
+  type        = "string"
+  description = "the default branch / tag to be checked out by the pipeline when triggered"
+  default     = "master"
+}

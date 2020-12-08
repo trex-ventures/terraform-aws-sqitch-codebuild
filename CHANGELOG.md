@@ -1,3 +1,9 @@
+## v0.3.0 (Dec 8, 2020)
+
+FEATURES:
+
+* Allow supplying default branch / tag to be checked out
+
 ## v0.2.0 (Oct 13, 2020)
 
 FEATURES:
