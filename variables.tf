@@ -95,3 +95,9 @@ variable "codebuild_privileged_mode" {
   description = "Whether Codebuild should run in privileged mode. Eg: if you need to run a Docker container in your buildspec"
   default     = "true"
 }
+
+variable "image_pull_credentials_type" {
+  type        = "string"
+  description = "Type of credentials AWS CodeBuild uses to pull images in your build. For cross account: use SERVICE_ROLE"
+  default     = "CODEBUILD"
+}

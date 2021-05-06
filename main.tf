@@ -26,6 +26,7 @@ resource "aws_codebuild_project" "deploy_pipeline" {
     image           = "${var.codebuild_image}"
     type            = "LINUX_CONTAINER"
     privileged_mode = "${var.codebuild_privileged_mode}"
+    image_pull_credentials_type = "${var.image_pull_credentials_type}"
 
     environment_variable = [
       {
