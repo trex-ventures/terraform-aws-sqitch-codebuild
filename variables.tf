@@ -83,3 +83,15 @@ variable "source_version" {
   description = "the default branch / tag to be checked out by the pipeline when triggered"
   default     = "master"
 }
+
+variable "codebuild_image" {
+  type        = "string"
+  description = "The Docker image to use for Codebuild execution"
+  default     = "aws/codebuild/standard:4.0"
+}
+
+variable "codebuild_privileged_mode" {
+  type        = "string"
+  description = "Whether Codebuild should run in privileged mode. Eg: if you need to run a Docker container in your buildspec"
+  default     = "true"
+}

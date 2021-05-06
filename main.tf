@@ -2,21 +2,19 @@
 module "codebuild_name" {
   source        = "github.com/traveloka/terraform-aws-resource-naming.git?ref=v0.18.1"
   name_prefix   = "${var.product_domain}-${var.pipeline_name}"
-  resource_type = "codebuild_project" 
-} 
+  resource_type = "codebuild_project"
+}
 
 # Codebuild pipeline
 resource "aws_codebuild_project" "deploy_pipeline" {
   name         = "${module.codebuild_name.name}"
   description  = "${var.description}"
   service_role = "${var.codebuild_role_arn}"
-  
+
   vpc_config {
-    vpc_id = "${var.vpc_id}"
-    
-    subnets = [ "${var.vpc_subnet_app_ids}" ]
-    
-    security_group_ids = [ "${var.codebuild_sqitch_sg_id}" ]
+    vpc_id             = "${var.vpc_id}"
+    subnets            = ["${var.vpc_subnet_app_ids}"]
+    security_group_ids = ["${var.codebuild_sqitch_sg_id}"]
   }
 
   artifacts {
@@ -25,10 +23,10 @@ resource "aws_codebuild_project" "deploy_pipeline" {
 
   environment {
     compute_type    = "BUILD_GENERAL1_SMALL"
-    image           = "aws/codebuild/standard:4.0"
+    image           = "${var.codebuild_image}"
     type            = "LINUX_CONTAINER"
-    privileged_mode = true
-    
+    privileged_mode = "${var.codebuild_privileged_mode}"
+
     environment_variable = [
       {
         name  = "PGPASSWORD"
@@ -50,7 +48,6 @@ resource "aws_codebuild_project" "deploy_pipeline" {
         value = "HEAD"
         type  = "PLAINTEXT"
       },
-
       {
         name  = "SQITCH_PROJECT_PATH"
         value = "${var.sqitch_project_path}"

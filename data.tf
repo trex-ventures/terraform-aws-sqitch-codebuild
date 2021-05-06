@@ -11,7 +11,6 @@ phases:
 EOF
 
   vars = {
-    product_domain = "${var.product_domain}" 
+    product_domain = "${var.product_domain}"
   }
 }
-
