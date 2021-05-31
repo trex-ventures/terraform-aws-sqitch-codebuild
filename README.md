@@ -1,6 +1,6 @@
 # Terraform AWS Sqitch Codebuild
 
-[![Terraform Version](https://img.shields.io/badge/Terraform%20Version-0.11.14-blue.svg)](https://releases.hashicorp.com/terraform/)
+[![Terraform Version](https://img.shields.io/badge/Terraform%20Version-0.12.31-blue.svg)](https://releases.hashicorp.com/terraform/)
 [![Release](https://img.shields.io/github/release/traveloka/terraform-aws-sqitch-codebuild.svg)](https://github.com/traveloka/terraform-aws-sqitch-codebuild/releases)
 [![Last Commit](https://img.shields.io/github/last-commit/traveloka/terraform-aws-sqitch-codebuild.svg)](https://github.com/traveloka/terraform-aws-sqitch-codebuild/commits/master)
 [![Issues](https://img.shields.io/github/issues/traveloka/terraform-aws-sqitch-codebuild.svg)](https://github.com/traveloka/terraform-aws-sqitch-codebuild/issues)
@@ -22,7 +22,7 @@ This repository contains a terraform module to create a CodeBuild pipeline for d
 
 ## Prerequisites
 
-For Terraform version, this module has been tested on terraform 0.11.14. It might not run correctly on 0.12 or above. 
+For Terraform version, this module has been tested on terraform 0.12.31. It won't run correctly on 0.11 or below. 
 
 For terraform Providers:
 
@@ -44,13 +44,13 @@ Go to the `example` directory, there are two example provided there. The `simple
 
 We use [SemVer](https://semver.org/) for our versioning
 
-**Latest stable version** `v0.3.0`, 8th December 2020
+**Latest stable version** `v1.0.0`, 31st May 2021
 
-**Latest version** `v0.3.0`, 8th December 2020
+**Latest version** `v1.0.0`, 31st May 2021
 
 **Latest release** :
 
-- Add option to supply buildspec directly and add environment variables
+- Terraform 12 syntax
 
 Please also see our `CHANGELOG` document in this repository and see more detail
 
