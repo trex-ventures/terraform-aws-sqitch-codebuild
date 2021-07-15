@@ -1,103 +1,103 @@
 variable "additional_tags" {
-  type        = "map"
+  type        = map(string)
   description = "additional tags for the pipeline"
   default     = {}
 }
 
-variable "product_domain" {
-  type        = "string"
+variable "product" {
+  type        = string
   description = "product domain of the RDS and codebuild owner"
 }
 
 variable "description" {
-  type        = "string"
+  type        = string
   description = "description for the codebuild pipeline tag"
   default     = "codebuild pipeline to deploy sqitch to RDS"
 }
 
 variable "codebuild_role_arn" {
-  type        = "string"
+  type        = string
   description = "The ARN of codebuild role created in codebuild-sqitch-shared-resources."
 }
 
-variable "pipeline_name" {
-  type        = "string"
-  description = "The pipeline name prefix (after product domain), might be RDS name, repository name, or whatever is good enough for your team"
+variable "service_name" {
+  type        = string
+  description = "The service name that have the sqitch to be executed."
 }
 
 variable "environment" {
-  type        = "string"
+  type        = string
   description = "environment where the resources will be created"
 }
 
 variable "vpc_id" {
-  type        = "string"
+  type        = string
   description = "the VPC ID where the codebuild pipeline will be put. Use vpc_id output from the vpc terraform module"
 }
 
 variable "vpc_subnet_app_ids" {
-  type        = "list"
+  type        = list(string)
   description = "the app subnets for the codebuild pipeline. Use subnet_app_ids output from the vpc terraform module"
 }
 
 variable "codebuild_sqitch_sg_id" {
-  type        = "string"
+  type        = string
   description = "The security group for the codebuild pipeline, use the codebuild_security_group_id from the codebuild-sqitch-shared-resources"
 }
 
 variable "sqitch_project_path" {
-  type        = "string"
+  type        = string
   description = "the sqitch project path from repository root"
 }
 
 variable "sqitch_project_repository" {
-  type        = "string"
+  type        = string
   description = "the repository that contains the sqitch project"
 }
 
 variable "password_parameter_store_path" {
-  type        = "string"
+  type        = string
   description = "the name of the postgres password parameter (looks like a path) in the ssm parameter store"
 }
 
 variable "log_retention_in_days" {
-  type        = "string"
+  type        = number
   description = "the length of the period where each log will be saved"
-  default     = "14"
+  default     = 14
 }
 
 variable "environment_variables" {
-  type        = "list"
+  type        = list(map(string))
   description = "A list of environment variables to be given to CodeBuild"
   default     = []
 }
 
 variable "buildspec" {
-  type        = "string"
+  type        = string
   description = "To manually override the default buildspec template"
   default     = ""
 }
 
 variable "source_version" {
-  type        = "string"
+  type        = string
   description = "the default branch / tag to be checked out by the pipeline when triggered"
   default     = "master"
 }
 
 variable "codebuild_image" {
-  type        = "string"
+  type        = string
   description = "The Docker image to use for Codebuild execution"
-  default     = "aws/codebuild/standard:4.0"
+  default     = "aws/codebuild/standard:5.0"
 }
 
 variable "codebuild_privileged_mode" {
-  type        = "string"
+  type        = string
   description = "Whether Codebuild should run in privileged mode. Eg: if you need to run a Docker container in your buildspec"
-  default     = "true"
+  default     = false
 }
 
 variable "image_pull_credentials_type" {
-  type        = "string"
+  type        = string
   description = "Type of credentials AWS CodeBuild uses to pull images in your build. For cross account: use SERVICE_ROLE"
-  default     = "CODEBUILD"
+  default     = "SERVICE_ROLE"
 }

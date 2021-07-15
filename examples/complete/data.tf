@@ -26,7 +26,7 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - ./scripts/assume_role.sh -r arn:aws:iam::015110552125:role/BeiartfWriter_$${product_domain}
+      - ./scripts/assume_role.sh -r arn:aws:iam::015110552125:role/BeiartfWriter_${local.product_domain}
   build:
     commands: 
       - ./scripts/sqitch_codebuild.sh
@@ -34,8 +34,4 @@ phases:
     commands:
       - ./scripts/notif_slack_channel.sh
 EOF
-
-  vars = {
-    product_domain = "${local.product_domain}" 
-  }
 }

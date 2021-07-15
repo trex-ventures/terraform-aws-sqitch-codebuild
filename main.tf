@@ -1,19 +1,22 @@
 # Codebuild Pipeline Name
-module "codebuild_name" {
-  source        = "github.com/traveloka/terraform-aws-resource-naming.git?ref=v0.19.1"
-  name_prefix   = "${var.product_domain}-${var.pipeline_name}"
-  resource_type = "codebuild_project"
+resource "random_id" "codebuild_name" {
+  prefix = format("%s-%s-sqitch-", var.product, var.service_name)
+  keepers = {
+    product = var.product
+  }
+
+  byte_length = 8
 }
 
 # Codebuild pipeline
 resource "aws_codebuild_project" "deploy_pipeline" {
-  name         = "${module.codebuild_name.name}"
-  description  = "${var.description}"
-  service_role = "${var.codebuild_role_arn}"
+  name         = random_id.codebuild_name.hex
+  description  = var.description
+  service_role = var.codebuild_role_arn
 
   vpc_config {
-    vpc_id             = "${var.vpc_id}"
-    subnets            = "${var.vpc_subnet_app_ids}"
+    vpc_id             = var.vpc_id
+    subnets            = var.vpc_subnet_app_ids
     security_group_ids = ["${var.codebuild_sqitch_sg_id}"]
   }
 
@@ -22,21 +25,21 @@ resource "aws_codebuild_project" "deploy_pipeline" {
   }
 
   environment {
-    compute_type    = "BUILD_GENERAL1_SMALL"
-    image           = "${var.codebuild_image}"
-    type            = "LINUX_CONTAINER"
-    privileged_mode = "${var.codebuild_privileged_mode}"
-    image_pull_credentials_type = "${var.image_pull_credentials_type}"
+    compute_type                = "BUILD_GENERAL1_SMALL"
+    image                       = var.codebuild_image
+    type                        = "LINUX_CONTAINER"
+    privileged_mode             = var.codebuild_privileged_mode
+    image_pull_credentials_type = var.image_pull_credentials_type
 
     environment_variable {
       name  = "PGPASSWORD"
-      value = "${var.password_parameter_store_path}"
+      value = var.password_parameter_store_path
       type  = "PARAMETER_STORE"
     }
 
     environment_variable {
       name  = "TRAVELOKA_ENV"
-      value = "${var.environment}"
+      value = var.environment
       type  = "PLAINTEXT"
     }
 
@@ -54,51 +57,37 @@ resource "aws_codebuild_project" "deploy_pipeline" {
 
     environment_variable {
       name  = "SQITCH_PROJECT_PATH"
-      value = "${var.sqitch_project_path}"
+      value = var.sqitch_project_path
       type  = "PLAINTEXT"
     }
 
-    dynamic "environment_variable" { 
+    dynamic "environment_variable" {
       for_each = var.environment_variables
       content {
-        name = environment_variable.value["name"]
+        name  = environment_variable.value["name"]
         value = environment_variable.value["value"]
-        type = environment_variable.value["type"]
+        type  = environment_variable.value["type"]
       }
     }
   }
 
   source {
     type            = "GITHUB"
-    location        = "${var.sqitch_project_repository}"
-    buildspec       = "${coalesce(var.buildspec, data.template_file.buildspec.rendered)}"
+    location        = var.sqitch_project_repository
+    buildspec       = coalesce(var.buildspec, data.template_file.buildspec.rendered)
     git_clone_depth = "1"
   }
 
-  source_version = "${var.source_version}"
-
-  tags = "${merge(var.additional_tags, map(
-    "Name", format("%s-%s", var.product_domain, var.pipeline_name),
-    "ProductDomain", var.product_domain,
-    "Repository", var.sqitch_project_repository,
-    "Description", var.description,
-    "Environment", var.environment,
-    "ManagedBy", "terraform",
-  ))}"
+  source_version = var.source_version
 }
 
 # Cloudwatch Log Group
 resource "aws_cloudwatch_log_group" "build" {
   name = "/aws/codebuild/${aws_codebuild_project.deploy_pipeline.name}"
 
-  retention_in_days = "${var.log_retention_in_days}"
+  retention_in_days = var.log_retention_in_days
 
-  tags = "${merge(var.additional_tags, map(
-    "Name", format("/aws/codebuild/%s", aws_codebuild_project.deploy_pipeline.name),
-    "ProductDomain", var.product_domain,
-    "Repository", var.sqitch_project_repository,
-    "Environment", var.environment,
-    "Description", format("LogGroup for %s sqitch deploy pipeline", var.pipeline_name),
-    "ManagedBy", "terraform",
-  ))}"
+  tags = {
+    Description : format("LogGroup for %s sqitch deploy pipeline", var.service_name)
+  }
 }
